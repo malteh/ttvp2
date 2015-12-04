@@ -434,6 +434,8 @@ public final class NodeImpl extends Node {
 		return this.asyncExecutor;
 	}
 
+	Integer transaction = 0;
+
 	// TODO: implement this function in TTP
 	@Override
 	public final void broadcast(Broadcast info) throws CommunicationException {
@@ -458,24 +460,29 @@ public final class NodeImpl extends Node {
 		 * 3. Liegen keine weiteren Knoten mehr zwischen der eigenen und der
 		 * RangeHash ID, terminiert das rekursive Weiterleiten.
 		 */
-		
+
 		// 2.
 		this.notifyCallback.broadcast(info.getSource(), info.getTarget(),
-					info.getHit());
-		
+				info.getHit());
+		if (transaction < info.getTransaction())
+			return;
+
 		List<Node> fingerTable = new ArrayList<>(new LinkedHashSet<>(
 				impl.getFingerTable())); // eindeutig
-		Collections.sort(fingerTable); // sortiert
-		
+		// TODO: sort
+		//Collections.sort(fingerTable); // sortiert
+
 		for (int i = 0; i < fingerTable.size(); i++) {
 			Node node = fingerTable.get(i);
-			if (node.getNodeID().isInInterval(nodeID, info.getRange())) {
+
+			if (node.getNodeID().isInInterval(nodeID, info.getRange())) { //!!!!!!!!!!!
+				//System.out.println("r: " + info.getRange() + " nodeID:" + nodeID);
 				int nextIndex = i + 1;
 				ID range2 = (nextIndex < fingerTable.size()) ? fingerTable.get(
 						nextIndex).getNodeID() : // 1.
 						info.getRange(); // 3.
 				Broadcast info2 = new Broadcast(range2, info.getSource(),
-						info.getTarget(), info.getTransaction(), info.getHit());
+						range2, info.getTransaction(), info.getHit());
 				node.broadcast(info2);
 			}
 		}

@@ -9,9 +9,12 @@ public class Starter {
 		System.out.println("Starting ...");
 		de.uniba.wiai.lspi.chord.service.PropertiesLoader.loadPropertyFile();
 		
-		new Server();
+		new ChordNode("8080");
 		
-		new Client("8181");
-		new Client("8282");
+		ChordNode n1 = new ChordNode("8181", "localhost");
+		new ChordNode("8282", "localhost");
+		
+		n1.test();
+		System.exit(0);
 	}
 }

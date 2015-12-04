@@ -1114,13 +1114,14 @@ public final class ChordImpl implements Chord, Report, AsynChord {
 		ID range = localNode.getNodeID();
 		ID source = localNode.getNodeID();
 		// TODO: TTP: increment transaction
-		Integer transaction = 0;
-		Broadcast info = new Broadcast(range, source, target, transaction, hit);
+		
+		Broadcast info = new Broadcast(range, source, target, localNode.transaction, hit);
 		try {
 			localNode.broadcast(info);
 		} catch (CommunicationException e) {
 			logger.error("Failed to send a broadcast message.", e);
 		}
+		localNode.transaction++;
 	}
 
 	public void setCallback(NotifyCallback callback) {
