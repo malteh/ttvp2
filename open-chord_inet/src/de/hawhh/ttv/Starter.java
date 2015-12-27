@@ -1,7 +1,9 @@
 package de.hawhh.ttv;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Starter implements IGuiUpdater {
 
@@ -15,22 +17,24 @@ public class Starter implements IGuiUpdater {
 		new Starter();
 	}
 	
-	List<ChordNode> nodes = new ArrayList<ChordNode>();
+	Map<String, ChordNode> nodes = new HashMap<String, ChordNode>();
 	
-	public Starter() {		
-		nodes.add(new ChordNode("8080"));
-		nodes.add(new ChordNode("8181", "localhost"));
-		nodes.add(new ChordNode("8282", "localhost"));
+	public Starter() {
+		ChordNode server = new ChordNode(8080);
+		nodes.put(server.Id(), server);
 		
-		ChordNode n1 = nodes.get(1);
-		n1.test();
-		Ui u = new Ui(this);
+		for (int i = 1; i <= 2; i++) {
+			ChordNode c = new ChordNode((8080+i), "localhost");
+			nodes.put(c.Id(), c);
+		}
+		
+		new Ui(this);
 		//System.exit(0);
 	}
 	
 	public List<String> getNodeList() {
 		List<String> ret = new ArrayList<String>();
-		for (ChordNode chordNode : nodes) {
+		for (ChordNode chordNode : nodes.values()) {
 			ret.add(chordNode.Id());
 		}
 		
@@ -41,6 +45,10 @@ public class Starter implements IGuiUpdater {
 		List<String> ret = new ArrayList<String>();
 		ret.add("TODO");
 		return ret;
-		
+	}
+
+	@Override
+	public void doBroadcast(String id) {
+		nodes.get(id).test();
 	}
 }

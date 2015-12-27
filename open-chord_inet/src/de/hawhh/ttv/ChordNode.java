@@ -1,8 +1,6 @@
 package de.hawhh.ttv;
 
 import java.net.MalformedURLException;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 
 import de.uniba.wiai.lspi.chord.data.ID;
@@ -18,18 +16,18 @@ public class ChordNode implements NotifyCallback {
 	String protocol = URL.KNOWN_PROTOCOLS.get(URL.SOCKET_PROTOCOL);
 	URL localURL = null;
 	Chord chord = new ChordImpl();
-	private String port;
+	private int port;
 	private String server;
 	private boolean isClient = false;
 
-	public ChordNode(String port, String server) {
+	public ChordNode(int port, String server) {
 		isClient = true;
 		this.port = port;
 		this.server = server;
 		init();
 	}
 
-	public ChordNode(String port) {
+	public ChordNode(int port) {
 		this.port = port;
 		init();
 	}

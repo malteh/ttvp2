@@ -9,7 +9,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
-import java.util.List;
 import java.awt.event.ActionEvent;
 
 // UI template from http://java.about.com/od/creatinguserinterfaces/ss/Example-Java-Code-For-Building-A-Simple-Gui-Application.htm
@@ -40,7 +39,7 @@ public class Ui {
 	JList<String> neighborsList = new JList<String>(listModel);
 	JLabel listLbl = new JLabel("Neighbors:");
 
-	public Ui(IGuiUpdater g) {
+	public Ui(final IGuiUpdater g) {
 		this.g = g;
 
 		JFrame guiFrame = new JFrame();
@@ -61,6 +60,7 @@ public class Ui {
 		listPanel.add(neighborsList);
 
 		JButton switchViewBut = new JButton("Switch view");
+		JButton broadcastBut = new JButton("broadcast");
 
 		switchViewBut.addActionListener(new ActionListener() {
 			@Override
@@ -73,8 +73,16 @@ public class Ui {
 			}
 		});
 
+		broadcastBut.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				g.doBroadcast((String) nodesBox.getSelectedItem());
+			}
+		});
+		
 		guiFrame.add(comboPanel, BorderLayout.NORTH);
 		guiFrame.add(listPanel, BorderLayout.CENTER);
+		guiFrame.add(broadcastBut, BorderLayout.EAST);
 		guiFrame.add(switchViewBut, BorderLayout.SOUTH);
 
 		guiFrame.setVisible(true);
