@@ -1,6 +1,7 @@
 package de.hawhh.ttv;
 
 import java.net.MalformedURLException;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -96,5 +97,9 @@ public class ChordNode implements NotifyCallback {
 	
 	private String substr(Object s) {
 		return s.toString().substring(0,2);
+	}
+
+	public String Id() {
+		return chord.getID().toString();
 	}
 }
