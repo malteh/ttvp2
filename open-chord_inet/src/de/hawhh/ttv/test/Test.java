@@ -11,6 +11,8 @@ import de.hawhh.ttv.ShipManager;
 import de.uniba.wiai.lspi.chord.data.ID;
 
 public class Test {
+	final BigInteger CHORD_MIN = BigInteger.valueOf(0);
+	final BigInteger CHORD_MAX = BigInteger.valueOf(2).pow(160).subtract(BigInteger.ONE);
 	
 	@org.junit.Test
 	public void testInterval() {
@@ -41,5 +43,13 @@ public class Test {
 		}
 		
 		assertEquals(2, count);
+	}
+	
+	@org.junit.Test
+	public void testMax() {		
+		ShipManager s1 = new ShipManager(ID.valueOf(CHORD_MIN), ID.valueOf(CHORD_MAX));
+		ShipManager s2 = new ShipManager(ID.valueOf(CHORD_MIN), ID.valueOf(CHORD_MAX.subtract(BigInteger.valueOf(1))));
+		assertTrue(s1.hasMaxID());
+		assertFalse(s2.hasMaxID());
 	}
 }

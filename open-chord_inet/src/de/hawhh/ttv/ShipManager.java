@@ -17,6 +17,7 @@ public class ShipManager {
 	
 	public final int INTERVAL_COUNT = 100;
 	public final int SHIP_COUNT = 10;
+	public final BigInteger chordMax = BigInteger.valueOf(2).pow(160).subtract(BigInteger.ONE);
 
 	private List<Slot> slots = new ArrayList<>();
 
@@ -69,21 +70,36 @@ public class ShipManager {
 			slots.get(i).hasShip = true;
 		}
 	}
-	
+
 	public Boolean tryHit(ID id) {
+		Slot s = getContainingSlot(id);
+		if (s == null)
+			return false;		
+		
+		if (s.hasShip) {
+			s.hasShip = false;
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private Slot getContainingSlot(ID id) {
 		for (Slot slot : slots) {
 			ID s = ID.valueOf(slot.start.toBigInteger().subtract(BigInteger.valueOf(1)));
 			ID e = ID.valueOf(slot.end.toBigInteger().add(BigInteger.valueOf(1)));
-			if (slot.hasShip && id.isInInterval(s, e)) {
-				slot.hasShip = false;
-				return true;
+			if (id.isInInterval(s, e)) {
+				return slot;
 			}
 		}
-		return false;
+		return null;
+	}
+	
+	public boolean hasMaxID() {
+		return getContainingSlot(ID.valueOf(chordMax)) != null;
 	}
 
 	public BigInteger diff(ID end, ID start) {
-		BigInteger chordMax = BigInteger.valueOf(2).pow(160).subtract(BigInteger.ONE);
 		return end.toBigInteger().add(start.toBigInteger().negate()).mod(chordMax);
 	}
 	
