@@ -262,5 +262,6 @@ public interface Chord {
 	public abstract void broadcast (ID target, Boolean hit);
 	
 	public ID getPredecessorID();
+	public void addTid(Integer tid);
 
 }

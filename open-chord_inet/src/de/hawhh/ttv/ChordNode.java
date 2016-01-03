@@ -11,7 +11,7 @@ import de.uniba.wiai.lspi.chord.service.ServiceException;
 import de.uniba.wiai.lspi.chord.service.impl.ChordImpl;
 
 public class ChordNode implements NotifyCallback {
-
+	
 	private Logger logger = Logger.getLogger(ChordNode.class);
 	String protocol = URL.KNOWN_PROTOCOLS.get(URL.SOCKET_PROTOCOL);
 	URL localURL = null;
@@ -35,7 +35,6 @@ public class ChordNode implements NotifyCallback {
 	private void init() {
 		logger.info("Starting Server ...");
 
-		// TODO: make pretty
 		try {
 			de.uniba.wiai.lspi.chord.service.PropertiesLoader
 					.loadPropertyFile();
@@ -50,7 +49,6 @@ public class ChordNode implements NotifyCallback {
 
 		chord.setCallback(this);
 
-		// TODO: make pretty, client/server separation
 		if (isClient) {
 			URL bootstrapURL = null;
 			try {
@@ -60,15 +58,12 @@ public class ChordNode implements NotifyCallback {
 			}
 			try {
 				chord.join(localURL, bootstrapURL);
-				//System.out.println(chord.getID());
-				//logger.info(chord.getPredecessorID());
 			} catch (ServiceException e) {
 				throw new RuntimeException(" Could not join DHT ! ", e);
 			}
 		} else {
 			try {
 				chord.create(localURL);
-				//System.out.println(chord.getID());
 			} catch (ServiceException e) {
 				throw new RuntimeException(" Could not create DHT !", e);
 			}
@@ -79,6 +74,7 @@ public class ChordNode implements NotifyCallback {
 
 	@Override
 	public void retrieved(ID target) {
+		
 		// TODO Auto-generated method stub
 	}
 	
@@ -88,9 +84,10 @@ public class ChordNode implements NotifyCallback {
 	}
 
 	@Override
-	public void broadcast(ID source, ID target, Boolean hit) {
-		// TODO Auto-generated method stub
+	public void broadcast(ID source, ID target, Boolean hit, int transactionID) {
+		chord.addTid(transactionID);
 		System.out.println(substr(chord.getID()) + ": broadcast s:" + substr(source) + " t:" + substr(target));
+		logger.info(substr(chord.getID())+": "+transactionID);
 	}
 	
 	private String substr(Object s) {

@@ -76,6 +76,7 @@ public class Ui {
 		broadcastBut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
+				System.out.println("do broadcast");
 				g.doBroadcast((String) nodesBox.getSelectedItem());
 			}
 		});

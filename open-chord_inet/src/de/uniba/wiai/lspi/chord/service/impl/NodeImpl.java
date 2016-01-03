@@ -41,6 +41,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import de.hawhh.ttv.GameHistory;
 import de.uniba.wiai.lspi.chord.com.Broadcast;
 import de.uniba.wiai.lspi.chord.com.CommunicationException;
 import de.uniba.wiai.lspi.chord.com.Endpoint;
@@ -409,8 +410,8 @@ public final class NodeImpl extends Node {
 	final Executor getAsyncExecutor() {
 		return this.asyncExecutor;
 	}
-
-	Integer transaction = 0;
+	
+	public GameHistory g = new GameHistory();
 
 	// TODO: implement this function in TTP
 	@Override
@@ -418,6 +419,12 @@ public final class NodeImpl extends Node {
 		if (this.logger.isEnabledFor(DEBUG)) {
 			this.logger.debug(" Send broadcast message");
 		}
+		
+		if (g.isDuplicate(info.getTransaction())) {
+			logger.warn("duplicate");
+			return;
+		}
+				
 		/*
 		 * Jeder Knoten leitet ein Broadcast-Paket mit RangeHash X an alle ihm
 		 * bekannten Knoten (mit aktualisiertem Range) zwischen seiner ID und X
@@ -438,25 +445,41 @@ public final class NodeImpl extends Node {
 		 */
 
 		// 2.
-		this.notifyCallback.broadcast(info.getSource(), info.getTarget(), info.getHit());
-		if (transaction < info.getTransaction())
-			return;
-
+		this.notifyCallback.broadcast(info.getSource(), info.getTarget(), info.getHit(), info.getTransaction());
+		
 		List<Node> fingerTable = new ArrayList<>(new LinkedHashSet<>(impl.getFingerTable())); // eindeutig
 		Collections.sort(cutPredecessors(fingerTable)); // sortiert
-
 		for (int i = 0; i < fingerTable.size(); i++) {
 			Node node = fingerTable.get(i);
 
-			if (node.getNodeID().isInInterval(nodeID, info.getRange())) { // !!!!!!!!!!!
-				// System.out.println("r: " + info.getRange() + " nodeID:" +
-				// nodeID);
+			if (node.getNodeID().isInInterval(nodeID, info.getRange())) {
 				int nextIndex = i + 1;
 				ID range2 = (nextIndex < fingerTable.size()) ? fingerTable.get(nextIndex).getNodeID()
 						: // 1.
 						info.getRange(); // 3.
-				Broadcast info2 = new Broadcast(range2, info.getSource(), range2, info.getTransaction(), info.getHit());
+				Broadcast info2 = new Broadcast(range2, info.getSource(), info.getTarget(), info.getTransaction(), info.getHit());
 				node.broadcast(info2);
+				//new Thread(new AsyncBroadcast(node, info2)).start();
+			}
+		}
+	}
+
+	private class AsyncBroadcast implements Runnable {
+
+		Node node;
+		Broadcast broadcast;
+
+		public AsyncBroadcast(Node n, Broadcast b) {
+			node = n;
+			broadcast = b;
+		}
+
+		@Override
+		public void run() {
+			try {
+				node.broadcast(broadcast);
+			} catch (CommunicationException e) {
+				e.printStackTrace();
 			}
 		}
 	}

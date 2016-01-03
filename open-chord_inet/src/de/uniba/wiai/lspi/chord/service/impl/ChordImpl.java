@@ -31,6 +31,7 @@ import static de.uniba.wiai.lspi.util.logging.Logger.LogLevel.DEBUG;
 import static de.uniba.wiai.lspi.util.logging.Logger.LogLevel.INFO;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -1107,21 +1108,22 @@ public final class ChordImpl implements Chord, Report, AsynChord {
 	}
 
 	// TODO: implement this function in TTP
-	// send broadcast to all nodes in finger table
+	// send broadcast to all nodes in finger table	
 	@Override
 	public void broadcast(ID target, Boolean hit) {
 		this.logger.debug("App called broadcast");
-		ID range = localNode.getNodeID();
-		ID source = localNode.getNodeID();
-		// TODO: TTP: increment transaction
 		
-		Broadcast info = new Broadcast(range, source, target, localNode.transaction, hit);
+		Integer transaction = localNode.g.nextTid();
+		Broadcast info = new Broadcast(localNode.getNodeID(), localNode.getNodeID(), target, transaction, hit);
 		try {
 			localNode.broadcast(info);
 		} catch (CommunicationException e) {
 			logger.error("Failed to send a broadcast message.", e);
 		}
-		localNode.transaction++;
+	}
+	
+	public void addTid(Integer tid) {
+		localNode.g.addTid(tid);
 	}
 
 	public void setCallback(NotifyCallback callback) {
