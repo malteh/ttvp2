@@ -29,9 +29,9 @@ public class ShipManager {
 		BigInteger totalSize = diff(end, start);
 		BigInteger slotSize = totalSize.divide(BigInteger.valueOf(INTERVAL_COUNT));
 		for (int i = 0; i < INTERVAL_COUNT; i++) {
-			BigInteger delta = slotSize.multiply(BigInteger.valueOf(i));
+			BigInteger delta = slotSize.multiply(BigInteger.valueOf(i)).add(BigInteger.valueOf(1));
 			ID s = ID.valueOf(start.toBigInteger().add(delta));
-			ID e = ID.valueOf(s.toBigInteger().add(slotSize));
+			ID e = ID.valueOf(s.toBigInteger().add(slotSize).add(BigInteger.valueOf(1)));
 			slots.add(new Slot(s.addPowerOfTwo(0), e));
 		}
 		// numerisch überzählige Adressen werden dem numerisch letzten Intervall zugeschlagen
@@ -55,8 +55,10 @@ public class ShipManager {
 		for (Slot slot : slots) {
 			ID s = slot.start;
 			ID e = slot.end;
-			if (id.isInInterval(s, e) && slot.hasShip)
+			if (id.isInInterval(s, e) && slot.hasShip) {
+				slot.hasShip = false;
 				return true;
+			}
 		}
 		return false;
 	}
@@ -72,6 +74,7 @@ public class ShipManager {
 		public Boolean hasShip = false;
 
 		public Slot(ID start, ID end) {
+			if (start.equals(end)) throw new IllegalArgumentException();
 			this.start = start;
 			this.end = end;
 		}
