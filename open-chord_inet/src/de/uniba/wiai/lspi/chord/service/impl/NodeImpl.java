@@ -459,27 +459,6 @@ public final class NodeImpl extends Node {
 						info.getRange(); // 3.
 				Broadcast info2 = new Broadcast(range2, info.getSource(), info.getTarget(), info.getTransaction(), info.getHit());
 				node.broadcast(info2);
-				//new Thread(new AsyncBroadcast(node, info2)).start();
-			}
-		}
-	}
-
-	private class AsyncBroadcast implements Runnable {
-
-		Node node;
-		Broadcast broadcast;
-
-		public AsyncBroadcast(Node n, Broadcast b) {
-			node = n;
-			broadcast = b;
-		}
-
-		@Override
-		public void run() {
-			try {
-				node.broadcast(broadcast);
-			} catch (CommunicationException e) {
-				e.printStackTrace();
 			}
 		}
 	}

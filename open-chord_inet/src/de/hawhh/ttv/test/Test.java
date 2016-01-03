@@ -3,6 +3,9 @@ package de.hawhh.ttv.test;
 import static org.junit.Assert.*;
 
 import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import de.hawhh.ttv.ShipManager;
 import de.uniba.wiai.lspi.chord.data.ID;
@@ -21,10 +24,14 @@ public class Test {
 
 	@org.junit.Test
 	public void testShipManager() {
-		int size = 200;
+		int size = 203;
 		ID start = ID.valueOf(BigInteger.valueOf(0));
 		ID end = ID.valueOf(BigInteger.valueOf(size));
-		ShipManager s = new ShipManager(start, end);
+		
+		Set<Integer> set = new HashSet<Integer>(Arrays.asList(0, 10));
+		
+		ShipManager s = new ShipManager(start, end, set);
+		
 		int count = 0;
 		for (int i = 0; i < size; i++) {
 			ID id = ID.valueOf(BigInteger.valueOf(i));
@@ -32,6 +39,7 @@ public class Test {
 				count++; 
 			}
 		}
-		assertEquals(10, count);
+		
+		assertEquals(2, count);
 	}
 }

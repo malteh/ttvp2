@@ -1,6 +1,7 @@
 package de.hawhh.ttv;
 
 import java.net.MalformedURLException;
+
 import org.apache.log4j.Logger;
 
 import de.uniba.wiai.lspi.chord.data.ID;
@@ -68,7 +69,6 @@ public class ChordNode implements NotifyCallback {
 				throw new RuntimeException(" Could not create DHT !", e);
 			}
 		}
-		
 		logger.info("ok");
 	}
 
@@ -79,22 +79,33 @@ public class ChordNode implements NotifyCallback {
 	}
 	
 	public void test() {
-		// TODO: Thread oder AsyncChord
-		chord.broadcast(chord.getID(), true);
+		new Thread(new AsyncBroadcast(chord, true)).start();
 	}
 
 	@Override
 	public void broadcast(ID source, ID target, Boolean hit, int transactionID) {
 		chord.addTid(transactionID);
-		System.out.println(substr(chord.getID()) + ": broadcast s:" + substr(source) + " t:" + substr(target));
-		logger.info(substr(chord.getID())+": "+transactionID);
-	}
-	
-	private String substr(Object s) {
-		return s.toString().substring(0,2);
+		logger.assertLog(hit, String.format("%s hit by %s", target, source));
 	}
 
 	public String Id() {
 		return chord.getID().toString();
+	}
+	
+
+	private class AsyncBroadcast implements Runnable {
+
+		Chord chord;
+		Boolean hit;
+
+		public AsyncBroadcast(Chord c, Boolean h) {
+			chord = c;
+			hit = h;
+		}
+
+		@Override
+		public void run() {
+			chord.broadcast(chord.getID(), hit);
+		}
 	}
 }

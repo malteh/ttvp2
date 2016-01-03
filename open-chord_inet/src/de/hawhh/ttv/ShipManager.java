@@ -7,9 +7,14 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import de.uniba.wiai.lspi.chord.data.ID;
 
 public class ShipManager {
+	
+	private Logger logger = Logger.getLogger(ShipManager.class);
+	
 	public final int INTERVAL_COUNT = 100;
 	public final int SHIP_COUNT = 10;
 
@@ -24,15 +29,23 @@ public class ShipManager {
 		initSlots();
 		selectShipPositions();
 	}
+	
+	public ShipManager(ID start, ID end, Set<Integer> ships) {
+		this.start = start;
+		this.end = end;
+		initSlots();
+		selectShipPositions(ships);
+		logSlots();
+	}
 
 	private void initSlots() {
 		BigInteger totalSize = diff(end, start);
 		BigInteger slotSize = totalSize.divide(BigInteger.valueOf(INTERVAL_COUNT));
 		for (int i = 0; i < INTERVAL_COUNT; i++) {
-			BigInteger delta = slotSize.multiply(BigInteger.valueOf(i)).add(BigInteger.valueOf(1));
+			BigInteger delta = slotSize.multiply(BigInteger.valueOf(i));
 			ID s = ID.valueOf(start.toBigInteger().add(delta));
-			ID e = ID.valueOf(s.toBigInteger().add(slotSize).add(BigInteger.valueOf(1)));
-			slots.add(new Slot(s.addPowerOfTwo(0), e));
+			ID e = ID.valueOf(s.toBigInteger().add(slotSize).subtract(BigInteger.valueOf(1)));
+			slots.add(new Slot(s, e));
 		}
 		// numerisch überzählige Adressen werden dem numerisch letzten Intervall zugeschlagen
 		slots.get(slots.size() - 1).end = end;
@@ -51,11 +64,17 @@ public class ShipManager {
 		}
 	}
 	
+	private void selectShipPositions(Set<Integer> ships) {
+		for (Integer i : ships) {
+			slots.get(i).hasShip = true;
+		}
+	}
+	
 	public Boolean tryHit(ID id) {
 		for (Slot slot : slots) {
-			ID s = slot.start;
-			ID e = slot.end;
-			if (id.isInInterval(s, e) && slot.hasShip) {
+			ID s = ID.valueOf(slot.start.toBigInteger().subtract(BigInteger.valueOf(1)));
+			ID e = ID.valueOf(slot.end.toBigInteger().add(BigInteger.valueOf(1)));
+			if (slot.hasShip && id.isInInterval(s, e)) {
 				slot.hasShip = false;
 				return true;
 			}
@@ -67,6 +86,12 @@ public class ShipManager {
 		BigInteger chordMax = BigInteger.valueOf(2).pow(160).subtract(BigInteger.ONE);
 		return end.toBigInteger().add(start.toBigInteger().negate()).mod(chordMax);
 	}
+	
+	public void logSlots() {
+		for (int i = 0; i < INTERVAL_COUNT; i++) {
+			logger.debug(String.format("Slot %2d: %s", i, slots.get(i)));
+		}
+	}
 
 	public class Slot {
 		public ID start;
@@ -77,6 +102,10 @@ public class ShipManager {
 			if (start.equals(end)) throw new IllegalArgumentException();
 			this.start = start;
 			this.end = end;
+		}
+		
+		public String toString() {
+			return String.format("Start: %s, End: %s, Has Ship: %s", start, end, hasShip);
 		}
 	}
 

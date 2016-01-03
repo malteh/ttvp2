@@ -2,6 +2,9 @@ package de.hawhh.ttv;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import org.apache.log4j.Logger;
+
 import javax.swing.JComboBox;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -13,6 +16,8 @@ import java.awt.event.ActionEvent;
 
 // UI template from http://java.about.com/od/creatinguserinterfaces/ss/Example-Java-Code-For-Building-A-Simple-Gui-Application.htm
 public class Ui {
+	
+	private Logger logger = Logger.getLogger(Ui.class);
 
 	private IGuiUpdater g;
 
@@ -76,7 +81,7 @@ public class Ui {
 		broadcastBut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				System.out.println("do broadcast");
+				logger.info("do broadcast");
 				g.doBroadcast((String) nodesBox.getSelectedItem());
 			}
 		});
