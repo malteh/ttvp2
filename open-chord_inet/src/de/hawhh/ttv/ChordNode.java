@@ -1,9 +1,11 @@
 package de.hawhh.ttv;
 
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 
 import org.apache.log4j.Logger;
 
+import de.hawhh.ttv.Strategy.Plan;
 import de.uniba.wiai.lspi.chord.data.ID;
 import de.uniba.wiai.lspi.chord.data.URL;
 import de.uniba.wiai.lspi.chord.service.Chord;
@@ -30,12 +32,16 @@ public class ChordNode implements NotifyCallback {
 		this.port = port;
 		this.server = server;
 		init();
-		startGame();
 	}
 
-	private void startGame() {
-		waitForGameReady();
+	public ChordNode(int port) {
+		this.port = port;
+		init();
+	}
+
+	public void startGame(Plan p) {
 		initShipManager();
+		strategy = new Strategy(gameHistory, p);
 		if (shipManager.hasMaxID()) {
 			logger.info(chord.getID() + " has 2^160-1");
 			fire();
@@ -52,18 +58,11 @@ public class ChordNode implements NotifyCallback {
 	}
 
 	private void initShipManager() {
-		// TODO initShipManager
+		ID start = ID.valueOf(chord.getPredecessorID().toBigInteger().add(BigInteger.valueOf(1)));
+		ID end = chord.getID();
+		shipManager = new ShipManager(start, end);
 	}
 
-	private void waitForGameReady() {
-		// TODO wait for game ready
-	}
-
-	public ChordNode(int port) {
-		this.port = port;
-		init();
-		startGame();
-	}
 
 	private void init() {
 		logger.info("Starting Server ...");
