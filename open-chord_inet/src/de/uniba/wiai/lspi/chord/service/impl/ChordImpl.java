@@ -41,6 +41,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import de.hawhh.ttv.GameHistory;
 import de.uniba.wiai.lspi.chord.com.Broadcast;
 import de.uniba.wiai.lspi.chord.com.CommunicationException;
 import de.uniba.wiai.lspi.chord.com.Entry;
@@ -1112,7 +1113,7 @@ public final class ChordImpl implements Chord, Report, AsynChord {
 	public void broadcast(ID target, Boolean hit) {
 		this.logger.debug("App called broadcast");
 		
-		Integer transaction = localNode.g.nextTid();
+		Integer transaction = GameHistory.getInstance(getID()).nextTid();
 		Broadcast info = new Broadcast(localNode.getNodeID(), localNode.getNodeID(), target, transaction, hit);
 		try {
 			localNode.broadcast(info);
@@ -1122,7 +1123,7 @@ public final class ChordImpl implements Chord, Report, AsynChord {
 	}
 	
 	public void addTid(Integer tid) {
-		localNode.g.addTid(tid);
+		GameHistory.getInstance(getID()).addTid(tid);
 	}
 
 	public void setCallback(NotifyCallback callback) {

@@ -410,8 +410,6 @@ public final class NodeImpl extends Node {
 	final Executor getAsyncExecutor() {
 		return this.asyncExecutor;
 	}
-	
-	public GameHistory g = new GameHistory();
 
 	// TODO: implement this function in TTP
 	@Override
@@ -420,7 +418,7 @@ public final class NodeImpl extends Node {
 			this.logger.debug(" Send broadcast message");
 		}
 		
-		if (g.isDuplicate(info.getTransaction())) {
+		if (GameHistory.getInstance(getNodeID()).isDuplicate(info.getTransaction())) {
 			logger.warn("duplicate");
 			return;
 		}

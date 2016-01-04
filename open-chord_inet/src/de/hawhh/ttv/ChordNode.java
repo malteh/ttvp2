@@ -20,17 +20,35 @@ public class ChordNode implements NotifyCallback {
 	private int port;
 	private String server;
 	private boolean isClient = false;
+	
+	private ShipManager s;
+	private GameHistory g = GameHistory.getInstance(chord.getID());
 
 	public ChordNode(int port, String server) {
 		isClient = true;
 		this.port = port;
 		this.server = server;
 		init();
+		startGame();
+	}
+
+	private void startGame() {
+		waitForGameReady();
+		initShipManager();
+	}
+
+	private void initShipManager() {
+		// TODO initShipManager
+	}
+
+	private void waitForGameReady() {
+		// TODO wait for game ready
 	}
 
 	public ChordNode(int port) {
 		this.port = port;
 		init();
+		startGame();
 	}
 
 	private void init() {
@@ -69,7 +87,8 @@ public class ChordNode implements NotifyCallback {
 				throw new RuntimeException(" Could not create DHT !", e);
 			}
 		}
-		logger.info("ok");
+		logger.info("node init done");
+		
 	}
 
 	@Override
