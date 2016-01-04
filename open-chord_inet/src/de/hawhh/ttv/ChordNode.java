@@ -21,8 +21,9 @@ public class ChordNode implements NotifyCallback {
 	private String server;
 	private boolean isClient = false;
 	
-	private ShipManager s;
-	private GameHistory g = GameHistory.getInstance(chord.getID());
+	private ShipManager shipManager;
+	private GameHistory gameHistory = GameHistory.getInstance(chord.getID());
+	private Strategy strategy;
 
 	public ChordNode(int port, String server) {
 		isClient = true;
@@ -35,6 +36,19 @@ public class ChordNode implements NotifyCallback {
 	private void startGame() {
 		waitForGameReady();
 		initShipManager();
+		if (shipManager.hasMaxID()) {
+			logger.info(chord.getID() + " has 2^160-1");
+			fire();
+		}
+	}
+
+	private void fire() {
+		ID target = strategy.getTarget();
+		try {
+			chord.retrieve(target);
+		} catch (ServiceException e) {
+			logger.fatal(e);
+		}
 	}
 
 	private void initShipManager() {
@@ -103,7 +117,7 @@ public class ChordNode implements NotifyCallback {
 
 	@Override
 	public void broadcast(ID source, ID target, Boolean hit, int transactionID) {
-		chord.addTid(transactionID);
+		gameHistory.addTransactionID(transactionID);
 		logger.assertLog(hit, String.format("%s hit by %s", target, source));
 	}
 

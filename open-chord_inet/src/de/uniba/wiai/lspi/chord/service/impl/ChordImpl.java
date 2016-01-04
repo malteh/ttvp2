@@ -1113,17 +1113,13 @@ public final class ChordImpl implements Chord, Report, AsynChord {
 	public void broadcast(ID target, Boolean hit) {
 		this.logger.debug("App called broadcast");
 		
-		Integer transaction = GameHistory.getInstance(getID()).nextTid();
+		Integer transaction = GameHistory.getInstance(getID()).nextTransactionID();
 		Broadcast info = new Broadcast(localNode.getNodeID(), localNode.getNodeID(), target, transaction, hit);
 		try {
 			localNode.broadcast(info);
 		} catch (CommunicationException e) {
 			logger.error("Failed to send a broadcast message.", e);
 		}
-	}
-	
-	public void addTid(Integer tid) {
-		GameHistory.getInstance(getID()).addTid(tid);
 	}
 
 	public void setCallback(NotifyCallback callback) {
