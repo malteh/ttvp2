@@ -63,7 +63,6 @@ public class ChordNode implements NotifyCallback {
 		shipManager = new ShipManager(start, end);
 	}
 
-
 	private void init() {
 		logger.info("Starting Server ...");
 
@@ -106,8 +105,14 @@ public class ChordNode implements NotifyCallback {
 
 	@Override
 	public void retrieved(ID target) {
-		
-		// TODO Auto-generated method stub
+		logger.info("try hit at " + target);
+		Boolean hit = shipManager.tryHit(target);
+		asyncBroadcast(hit);
+		fire();
+	}
+	
+	private void asyncBroadcast(Boolean hit) {
+		new Thread(new AsyncBroadcast(chord, hit)).start();
 	}
 	
 	public void test() {
@@ -117,13 +122,12 @@ public class ChordNode implements NotifyCallback {
 	@Override
 	public void broadcast(ID source, ID target, Boolean hit, int transactionID) {
 		gameHistory.addEvent(source, target, hit, transactionID);
-		logger.assertLog(hit, String.format("%s hit by %s", target, source));
+		if (hit) logger.info(String.format("%s hit by %s", target, source));
 	}
 
 	public String Id() {
 		return chord.getID().toString();
 	}
-	
 
 	private class AsyncBroadcast implements Runnable {
 
