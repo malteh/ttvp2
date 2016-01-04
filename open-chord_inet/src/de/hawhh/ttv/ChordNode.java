@@ -105,7 +105,7 @@ public class ChordNode implements NotifyCallback {
 
 	@Override
 	public void retrieved(ID target) {
-		logger.info("try hit at " + target);
+		logger.info("try hit at " + Helper.shortenID(target));
 		Boolean hit = shipManager.tryHit(target);
 		asyncBroadcast(hit);
 		fire();
@@ -122,7 +122,7 @@ public class ChordNode implements NotifyCallback {
 	@Override
 	public void broadcast(ID source, ID target, Boolean hit, int transactionID) {
 		gameHistory.addEvent(source, target, hit, transactionID);
-		if (hit) logger.info(String.format("%s hit by %s", target, source));
+		if (hit) logger.info(String.format("▄︻̷̿┻̿═━一 %s hit by %s", Helper.shortenID(target), Helper.shortenID(source)));
 	}
 
 	public String Id() {
