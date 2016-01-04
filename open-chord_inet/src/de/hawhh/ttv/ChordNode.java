@@ -64,8 +64,6 @@ public class ChordNode implements NotifyCallback {
 	}
 
 	private void init() {
-		logger.info("Starting Server ...");
-
 		try {
 			de.uniba.wiai.lspi.chord.service.PropertiesLoader
 					.loadPropertyFile();
