@@ -12,9 +12,9 @@ import org.apache.log4j.Logger;
 import de.uniba.wiai.lspi.chord.data.ID;
 
 public class ShipManager {
-	
+
 	private Logger logger = Logger.getLogger(ShipManager.class);
-	
+
 	public final int INTERVAL_COUNT = 100;
 	public final int SHIP_COUNT = 10;
 	public final BigInteger chordMax = BigInteger.valueOf(2).pow(160).subtract(BigInteger.ONE);
@@ -30,7 +30,7 @@ public class ShipManager {
 		initSlots();
 		selectShipPositions();
 	}
-	
+
 	public ShipManager(ID start, ID end, Set<Integer> ships) {
 		this.start = start;
 		this.end = end;
@@ -48,7 +48,8 @@ public class ShipManager {
 			ID e = ID.valueOf(s.toBigInteger().add(slotSize).subtract(BigInteger.valueOf(1)));
 			slots.add(new Slot(s, e));
 		}
-		// numerisch überzählige Adressen werden dem numerisch letzten Intervall zugeschlagen
+		// numerisch überzählige Adressen werden dem numerisch letzten Intervall
+		// zugeschlagen
 		slots.get(slots.size() - 1).end = end;
 	}
 
@@ -64,7 +65,7 @@ public class ShipManager {
 			slots.get(i).hasShip = true;
 		}
 	}
-	
+
 	private void selectShipPositions(Set<Integer> ships) {
 		for (Integer i : ships) {
 			slots.get(i).hasShip = true;
@@ -74,16 +75,22 @@ public class ShipManager {
 	public Boolean tryHit(ID id) {
 		Slot s = getContainingSlot(id);
 		if (s == null)
-			return false;		
-		
+			return false;
+
 		if (s.hasShip) {
 			s.hasShip = false;
 			return true;
 		}
-		
+
 		return false;
 	}
 	
+	public Boolean containsID(ID id) {
+		ID s = ID.valueOf(start.toBigInteger().subtract(BigInteger.valueOf(1)));
+		ID e = ID.valueOf(end.toBigInteger().add(BigInteger.valueOf(1)));
+		return id.isInInterval(s, e);
+	}
+
 	private Slot getContainingSlot(ID id) {
 		for (Slot slot : slots) {
 			ID s = ID.valueOf(slot.start.toBigInteger().subtract(BigInteger.valueOf(1)));
@@ -94,7 +101,7 @@ public class ShipManager {
 		}
 		return null;
 	}
-	
+
 	public boolean hasMaxID() {
 		return getContainingSlot(ID.valueOf(chordMax)) != null;
 	}
@@ -102,7 +109,7 @@ public class ShipManager {
 	public BigInteger diff(ID end, ID start) {
 		return end.toBigInteger().add(start.toBigInteger().negate()).mod(chordMax);
 	}
-	
+
 	public void logSlots() {
 		for (int i = 0; i < INTERVAL_COUNT; i++) {
 			logger.debug(String.format("Slot %2d: %s", i, slots.get(i)));
@@ -115,11 +122,12 @@ public class ShipManager {
 		public Boolean hasShip = false;
 
 		public Slot(ID start, ID end) {
-			if (start.equals(end)) throw new IllegalArgumentException();
+			if (start.equals(end))
+				throw new IllegalArgumentException();
 			this.start = start;
 			this.end = end;
 		}
-		
+
 		public String toString() {
 			return String.format("Start: %s, End: %s, Has Ship: %s", start, end, hasShip);
 		}

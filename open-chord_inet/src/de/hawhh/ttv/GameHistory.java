@@ -1,9 +1,12 @@
 package de.hawhh.ttv;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -27,27 +30,14 @@ public class GameHistory {
 		return gameHistoryCollection.get(nodeID);
 	}
 
-	// Transaction ID management
-	private List<Integer> transactionIDs = new ArrayList<Integer>();
-
-	public Integer nextTransactionID() {
-		return transactionIDs.isEmpty() ? 0 : transactionIDs.get(transactionIDs.size() - 1) + 1;
-	}
-
-	public void addTransactionID(Integer transactionID) {
-		transactionIDs.add(transactionID);
-	}
-
-	public Boolean isDuplicate(Integer transactionID) {
-		return transactionIDs.contains(transactionID);
-	}
-
-	// Game Event management
+	// GameEvent management
 	private final List<GameEvent> gameEvents = new ArrayList<>();
 
 	public void addEvent(ID source, ID target, Boolean hit, int transactionID) {
 		GameEvent g = new GameEvent(source, target, hit, transactionID);
 		gameEvents.add(g);
+		addTransactionID(transactionID);
+		addEnemy(source);
 		logger.debug("New Event:" + g);
 	}
 
@@ -62,5 +52,34 @@ public class GameHistory {
 			this.hit = hit;
 			this.transactionID = transactionID;
 		}
+	}	
+	
+	// Transaction ID management
+	private List<Integer> transactionIDs = new ArrayList<Integer>();
+
+	public Integer nextTransactionID() {
+		return transactionIDs.isEmpty() ? 0 : transactionIDs.get(transactionIDs.size() - 1) + 1;
+	}
+
+	private void addTransactionID(Integer transactionID) {
+		transactionIDs.add(transactionID);
+	}
+
+	public Boolean isDuplicate(Integer transactionID) {
+		return transactionIDs.contains(transactionID);
+	}
+	
+	// Enemy management
+	private final Set<ID> enemies = new HashSet<>();
+		
+	public void addEnemy(ID e) {
+		enemies.add(e);
+	}
+	
+	public List<ID> getEnemies() {
+		List<ID> ret = new ArrayList<ID>();
+		ret.addAll(enemies);
+		Collections.sort(ret);
+		return ret;
 	}
 }
