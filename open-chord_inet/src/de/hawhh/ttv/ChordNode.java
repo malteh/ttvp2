@@ -103,18 +103,18 @@ public class ChordNode implements NotifyCallback {
 
 	@Override
 	public void retrieved(ID target) {
-		logger.info("try hit at " + Helper.shortenID(target));
+		logger.info(chord.getID() + " tries hit at " + Helper.shortenID(target));
 		Boolean hit = shipManager.tryHit(target);
-		asyncBroadcast(hit);
+		asyncBroadcast(target, hit);
 		fire();
 	}
 	
-	private void asyncBroadcast(Boolean hit) {
-		new Thread(new AsyncBroadcast(chord, hit)).start();
+	private void asyncBroadcast(ID target, Boolean hit) {
+		new Thread(new AsyncBroadcast(chord, target, hit)).start();
 	}
 	
 	public void test() {
-		new Thread(new AsyncBroadcast(chord, true)).start();
+		new Thread(new AsyncBroadcast(chord, chord.getID(), true)).start();
 	}
 
 	@Override
@@ -131,15 +131,17 @@ public class ChordNode implements NotifyCallback {
 
 		Chord chord;
 		Boolean hit;
+		ID target;
 
-		public AsyncBroadcast(Chord c, Boolean h) {
+		public AsyncBroadcast(Chord c, ID t, Boolean h) {
 			chord = c;
 			hit = h;
+			target = t;
 		}
 
 		@Override
 		public void run() {
-			chord.broadcast(chord.getID(), hit);
+			chord.broadcast(target, hit);
 		}
 	}
 }
