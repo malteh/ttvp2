@@ -38,6 +38,13 @@ public class ShipManager {
 		selectShipPositions(ships);
 		logSlots();
 	}
+	
+	public ShipManager(ID start, ID end, Boolean value) {
+		this.start = start;
+		this.end = end;
+		initSlots();
+		setAllShipPositionsValue(value);
+	}
 
 	private void initSlots() {
 		BigInteger totalSize = diff(end, start);
@@ -71,6 +78,14 @@ public class ShipManager {
 			slots.get(i).hasShip = true;
 		}
 	}
+	
+	private void setAllShipPositionsValue(Boolean value) {
+		for (Slot s : slots) {
+			s.hasShip = value;
+		}
+	}
+	
+	
 
 	public Boolean tryHit(ID id) {
 		Slot s = getContainingSlot(id);

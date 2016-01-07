@@ -18,13 +18,16 @@ public class GameHistory {
 
 	private static Map<ID, GameHistory> gameHistoryCollection = new HashMap<>();
 
-	private GameHistory() {
+	public final ID id;
+	
+	private GameHistory(ID id) {
+		this.id = id;
 	}
 
 	// GameHistory factory
 	public static GameHistory getInstance(ID nodeID) {
 		if (!gameHistoryCollection.containsKey(nodeID)) {
-			gameHistoryCollection.put(nodeID, new GameHistory());
+			gameHistoryCollection.put(nodeID, new GameHistory(nodeID));
 		}
 
 		return gameHistoryCollection.get(nodeID);
@@ -71,9 +74,10 @@ public class GameHistory {
 	
 	// Enemy management
 	private final Set<ID> enemies = new HashSet<>();
-		
+	
 	public void addEnemy(ID e) {
-		enemies.add(e);
+		if (id != e)
+			enemies.add(e);
 	}
 	
 	public List<ID> getEnemies() {
