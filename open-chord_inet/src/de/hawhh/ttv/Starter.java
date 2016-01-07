@@ -28,7 +28,6 @@ public class Starter implements IGuiUpdater {
 			ChordNode server = new ChordNode(serverPort);
 			nodes.put(server.Id(), server);
 		}
-
 		logger.info("starting " + nodesToStart + " nodes");
 		for (int i = 1; i <= nodesToStart; i++) {
 			ChordNode c = new ChordNode((serverPort + i), serverHostname);

@@ -14,7 +14,7 @@ import de.uniba.wiai.lspi.chord.service.ServiceException;
 import de.uniba.wiai.lspi.chord.service.impl.ChordImpl;
 
 public class ChordNode implements NotifyCallback {
-	
+
 	private Logger logger = Logger.getLogger(ChordNode.class);
 	String protocol = URL.KNOWN_PROTOCOLS.get(URL.SOCKET_PROTOCOL);
 	URL localURL = null;
@@ -22,7 +22,7 @@ public class ChordNode implements NotifyCallback {
 	private int port;
 	private String server;
 	private boolean isClient = false;
-	
+
 	private ShipManager shipManager;
 	private GameHistory gameHistory = GameHistory.getInstance(chord.getID());
 	private Strategy strategy;
@@ -65,8 +65,7 @@ public class ChordNode implements NotifyCallback {
 
 	private void init() {
 		try {
-			de.uniba.wiai.lspi.chord.service.PropertiesLoader
-					.loadPropertyFile();
+			de.uniba.wiai.lspi.chord.service.PropertiesLoader.loadPropertyFile();
 		} catch (IllegalStateException e) {
 		}
 
@@ -97,22 +96,22 @@ public class ChordNode implements NotifyCallback {
 				throw new RuntimeException(" Could not create DHT !", e);
 			}
 		}
-		logger.info("node init done");
-		
+		logger.info("node " + Helper.shortenID(chord.getID()) + "init done");
+
 	}
 
 	@Override
 	public void retrieved(ID target) {
-		logger.info(chord.getID() + " tries hit at " + Helper.shortenID(target));
+		logger.info(Helper.shortenID(chord.getID()) + " tries hit at " + Helper.shortenID(target));
 		Boolean hit = shipManager.tryHit(target);
 		asyncBroadcast(target, hit);
 		fire();
 	}
-	
+
 	private void asyncBroadcast(ID target, Boolean hit) {
 		new Thread(new AsyncBroadcast(chord, target, hit)).start();
 	}
-	
+
 	public void test() {
 		new Thread(new AsyncBroadcast(chord, chord.getID(), true)).start();
 	}
@@ -120,7 +119,8 @@ public class ChordNode implements NotifyCallback {
 	@Override
 	public void broadcast(ID source, ID target, Boolean hit, int transactionID) {
 		gameHistory.addEvent(source, target, hit, transactionID);
-		if (hit) logger.info(String.format("▄︻̷̿┻̿═━一 %s hit by %s", Helper.shortenID(target), Helper.shortenID(source)));
+		if (hit)
+			logger.info(String.format("▄︻̷̿┻̿═━一 %s hit by %s", Helper.shortenID(target), Helper.shortenID(source)));
 	}
 
 	public String Id() {
