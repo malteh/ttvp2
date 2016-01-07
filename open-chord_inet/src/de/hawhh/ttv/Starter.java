@@ -16,7 +16,7 @@ public class Starter implements IGuiUpdater {
 	public static void main(String[] args) {
 		logger.info("Starting ...");
 		de.uniba.wiai.lspi.chord.service.PropertiesLoader.loadPropertyFile();
-		// TODO use parameters
+		// TODO set parameters via gui
 		new Starter("localhost", 8080, 2, true);
 	}
 
@@ -50,7 +50,6 @@ public class Starter implements IGuiUpdater {
 		}
 
 		new Ui(this);
-		// System.exit(0);
 	}
 
 	public List<String> getNodeList() {
@@ -62,14 +61,8 @@ public class Starter implements IGuiUpdater {
 		return ret;
 	}
 
-	public List<String> getNeighborList(String id) {
-		List<String> ret = new ArrayList<String>();
-		ret.add("TODO");
-		return ret;
-	}
-
 	@Override
-	public void doBroadcast(String id) {
-		nodes.get(id).test();
+	public void startGame() {
+		// TODO start game
 	}
 }

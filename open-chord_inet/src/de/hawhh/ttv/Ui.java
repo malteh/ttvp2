@@ -9,7 +9,6 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -28,21 +27,12 @@ public class Ui {
 		}
 	}
 
-	public void updateNeighbors() {
-		listModel.clear();
-		for (String n : g.getNeighborList((String) nodesBox.getSelectedItem())) {
-			listModel.addElement(n);
-		}
-	}
-
 	String[] nodes = {};
 
 	final JPanel comboPanel = new JPanel();
 	JLabel comboLbl = new JLabel("Nodes:");
 	JComboBox<String> nodesBox = new JComboBox<String>(nodes);
 	DefaultListModel<String> listModel = new DefaultListModel<String>();
-	JList<String> neighborsList = new JList<String>(listModel);
-	JLabel listLbl = new JLabel("Neighbors:");
 
 	public Ui(final IGuiUpdater g) {
 		this.g = g;
@@ -59,19 +49,12 @@ public class Ui {
 		final JPanel listPanel = new JPanel();
 		listPanel.setVisible(false);
 
-		neighborsList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-
-		listPanel.add(listLbl);
-		listPanel.add(neighborsList);
-
 		JButton switchViewBut = new JButton("Switch view");
 		JButton broadcastBut = new JButton("broadcast");
 
 		switchViewBut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				//listLbl.setText("Neighbors: " + nodesBox.getSelectedItem());
-				updateNeighbors();
 				listPanel.setVisible(!listPanel.isVisible());
 				comboPanel.setVisible(!comboPanel.isVisible());
 
@@ -81,8 +64,8 @@ public class Ui {
 		broadcastBut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				logger.info("do broadcast");
-				g.doBroadcast((String) nodesBox.getSelectedItem());
+				logger.info("start game");
+				g.startGame();
 			}
 		});
 		

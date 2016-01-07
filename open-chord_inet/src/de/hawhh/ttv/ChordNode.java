@@ -44,16 +44,7 @@ public class ChordNode implements NotifyCallback {
 		strategy = new Strategy(gameHistory, p, shipManager);
 		if (shipManager.hasMaxID()) {
 			logger.info(chord.getID() + " has 2^160-1");
-			fire();
-		}
-	}
-
-	private void fire() {
-		ID target = strategy.getTarget();
-		try {
-			chord.retrieve(target);
-		} catch (ServiceException e) {
-			logger.fatal(e);
+			retrieved(null);
 		}
 	}
 
@@ -102,18 +93,16 @@ public class ChordNode implements NotifyCallback {
 
 	@Override
 	public void retrieved(ID target) {
-		logger.info(Helper.shortenID(chord.getID()) + " tries hit at " + Helper.shortenID(target));
-		Boolean hit = shipManager.tryHit(target);
-		asyncBroadcast(target, hit);
-		fire();
+		Boolean hit = false;
+		if (target != null) {
+			logger.info(Helper.shortenID(chord.getID()) + " tries hit at " + Helper.shortenID(target));
+			hit = shipManager.tryHit(target);
+		}
+		asyncBroadcastAndFire(target, hit);
 	}
 
-	private void asyncBroadcast(ID target, Boolean hit) {
+	private void asyncBroadcastAndFire(ID target, Boolean hit) {
 		new Thread(new AsyncBroadcast(chord, target, hit)).start();
-	}
-
-	public void test() {
-		new Thread(new AsyncBroadcast(chord, chord.getID(), true)).start();
 	}
 
 	@Override
@@ -141,7 +130,14 @@ public class ChordNode implements NotifyCallback {
 
 		@Override
 		public void run() {
-			chord.broadcast(target, hit);
+			if (target != null)
+				chord.broadcast(target, hit);
+			ID t = strategy.getTarget();
+			try {
+				chord.retrieve(t);
+			} catch (ServiceException e) {
+				logger.fatal(e);
+			}
 		}
 	}
 }
