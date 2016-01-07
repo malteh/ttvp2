@@ -36,12 +36,10 @@ public class GameHistory {
 
 	// GameEvent management
 	private final List<GameEvent> gameEvents = new ArrayList<>();
-	private final List<GameEvent> gameEventsWithHit = new ArrayList<>();
 
 	public void addEvent(ID source, ID target, Boolean hit, int transactionID) {
 		GameEvent g = new GameEvent(source, target, hit, transactionID);
 		gameEvents.add(g);
-		if (hit) gameEventsWithHit.add(g);
 		addTransactionID(transactionID);
 		addEnemy(source);
 		logger.debug("New Event:" + g);
@@ -99,7 +97,7 @@ public class GameHistory {
 			if (e1 != id) { // do not add ourself as Enemy
 				Enemy e = new Enemy(e0, e1);
 				enemies.add(e);
-				for (GameEvent gameEvent : gameEventsWithHit) {
+				for (GameEvent gameEvent : gameEvents) {
 					e.shipManager.tryHit(gameEvent.target);
 				}
 			}

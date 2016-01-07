@@ -87,7 +87,7 @@ public class ShipManager {
 	}
 	
 	public Boolean hasShips() {
-		return shipCount == 0;
+		return shipCount <= 0;
 	}
 	
 	public int getShipCount() {
