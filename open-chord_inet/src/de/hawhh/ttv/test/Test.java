@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.hawhh.ttv.Enemy;
 import de.hawhh.ttv.ShipManager;
 import de.uniba.wiai.lspi.chord.data.ID;
 
@@ -52,4 +53,15 @@ public class Test {
 		assertTrue(s1.hasMaxID());
 		assertFalse(s2.hasMaxID());
 	}
+	
+	@org.junit.Test
+	public void testEnemy() {
+		Enemy e1 = new Enemy(ID.valueOf(BigInteger.valueOf(0)), ID.valueOf(BigInteger.valueOf(1000)));
+		Enemy e2 = new Enemy(ID.valueOf(BigInteger.valueOf(0)), ID.valueOf(BigInteger.valueOf(1000)));
+		Set<Enemy> s = new HashSet<>();
+		s.add(e1);
+		s.add(e2);
+		assertEquals(1, s.size());
+	}
+	
 }

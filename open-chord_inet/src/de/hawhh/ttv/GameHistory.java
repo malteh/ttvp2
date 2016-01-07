@@ -1,5 +1,6 @@
 package de.hawhh.ttv;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public class GameHistory {
 	private static Map<ID, GameHistory> gameHistoryCollection = new HashMap<>();
 
 	public final ID id;
-	
+
 	private GameHistory(ID id) {
 		this.id = id;
 	}
@@ -35,10 +36,12 @@ public class GameHistory {
 
 	// GameEvent management
 	private final List<GameEvent> gameEvents = new ArrayList<>();
+	private final List<GameEvent> gameEventsWithHit = new ArrayList<>();
 
 	public void addEvent(ID source, ID target, Boolean hit, int transactionID) {
 		GameEvent g = new GameEvent(source, target, hit, transactionID);
 		gameEvents.add(g);
+		if (hit) gameEventsWithHit.add(g);
 		addTransactionID(transactionID);
 		addEnemy(source);
 		logger.debug("New Event:" + g);
@@ -55,8 +58,8 @@ public class GameHistory {
 			this.hit = hit;
 			this.transactionID = transactionID;
 		}
-	}	
-	
+	}
+
 	// Transaction ID management
 	private List<Integer> transactionIDs = new ArrayList<Integer>();
 
@@ -71,18 +74,48 @@ public class GameHistory {
 	public Boolean isDuplicate(Integer transactionID) {
 		return transactionIDs.contains(transactionID);
 	}
-	
+
 	// Enemy management
-	private final Set<ID> enemies = new HashSet<>();
-	
+	private final Set<ID> enemyIds = new HashSet<>();
+	private final Set<Enemy> enemies = new HashSet<>();
+
 	public void addEnemy(ID e) {
-		if (id != e)
-			enemies.add(e);
+		if (id != e) {
+			enemyIds.add(e);
+			updateEnemies();
+		}
+	}
+
+	private void updateEnemies() {
+		List<ID> es = getEnemyIds();
+		es.add(id); // insert own id to close gap
+		Collections.sort(es);
+		enemies.clear();
+		for (int i = 0; i < es.size(); i++) {
+			ID e0 = es.get((i - 1 + es.size()) % es.size()); // get predecessor
+																// id
+			e0 = ID.valueOf(e0.toBigInteger().add(BigInteger.valueOf(1)));
+			ID e1 = es.get(i);
+			if (e1 != id) { // do not add ourself as Enemy
+				Enemy e = new Enemy(e0, e1);
+				enemies.add(e);
+				for (GameEvent gameEvent : gameEventsWithHit) {
+					e.shipManager.tryHit(gameEvent.target);
+				}
+			}
+		}
 	}
 	
-	public List<ID> getEnemies() {
-		List<ID> ret = new ArrayList<ID>();
+	public List<Enemy> getEnemies() {
+		List<Enemy> ret = new ArrayList<>();
 		ret.addAll(enemies);
+		Collections.sort(ret);
+		return ret;
+	}
+
+	public List<ID> getEnemyIds() {
+		List<ID> ret = new ArrayList<ID>();
+		ret.addAll(enemyIds);
 		Collections.sort(ret);
 		return ret;
 	}

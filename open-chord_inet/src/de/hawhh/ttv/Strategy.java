@@ -1,6 +1,7 @@
 package de.hawhh.ttv;
 
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Random;
 
 import org.apache.log4j.Logger;
@@ -26,6 +27,9 @@ public class Strategy {
 		case CENTER:
 			target = centerPlan();
 			break;
+		case WEAKEST:
+			target = weakestPlan();
+			break;
 		default:
 			target = randomPlan();
 			break;
@@ -34,6 +38,29 @@ public class Strategy {
 		return target;
 	}
 	
+	private ID weakestPlan() {
+		List<Enemy> es = gameHistory.getEnemies();
+		if (es.isEmpty())
+			return randomPlan();
+		
+		Enemy weakest = es.get(0);
+		
+		for (int i = 1; i < es.size(); i++) {
+			Enemy current = es.get(i);
+			if (weakest.shipManager.getShipCount() > current.shipManager.getShipCount())
+				weakest = current;
+		}
+		
+		ID target = weakest.shipManager.getSlotWithShip();
+		
+		if (target == null) { // target has no ships left
+			logger.info("WINNER!!!!!" + target + " is dead!");
+			target = weakest.endId;
+		}
+		
+		return target;
+	}
+
 	private ID randomPlan() {
 		Random rnd = new Random();
 		ID id;
@@ -48,7 +75,7 @@ public class Strategy {
 	}
 
 	public enum Plan {
-		RANDOM, CENTER
+		RANDOM, CENTER, WEAKEST
 	}
 
 }

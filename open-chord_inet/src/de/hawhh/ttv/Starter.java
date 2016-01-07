@@ -46,7 +46,7 @@ public class Starter implements IGuiUpdater {
 		}
 
 		for (ChordNode node : nodes.values()) {
-			node.startGame(Plan.RANDOM);
+			node.startGame(Plan.WEAKEST);
 		}
 
 		new Ui(this);

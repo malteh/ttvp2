@@ -23,6 +23,7 @@ public class ShipManager {
 
 	private final ID start;
 	private final ID end;
+	private int shipCount = SHIP_COUNT;
 
 	public ShipManager(ID start, ID end) {
 		this.start = start;
@@ -85,7 +86,21 @@ public class ShipManager {
 		}
 	}
 	
+	public Boolean hasShips() {
+		return shipCount == 0;
+	}
 	
+	public int getShipCount() {
+		return shipCount;
+	}
+	
+	public ID getSlotWithShip() {
+		for (Slot slot : slots) {
+			if (slot.hasShip)
+				return slot.end;
+		}
+		return null;
+	}
 
 	public Boolean tryHit(ID id) {
 		Slot s = getContainingSlot(id);
@@ -94,6 +109,7 @@ public class ShipManager {
 
 		if (s.hasShip) {
 			s.hasShip = false;
+			shipCount--;
 			return true;
 		}
 
