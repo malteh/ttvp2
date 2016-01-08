@@ -22,6 +22,7 @@ public class ChordNode implements NotifyCallback {
 	private final int port;
 	private final int serverPort;
 	private String server = "localhost";
+	private final String locAdr;
 	private boolean isClient = false;
 	private boolean isStarted = false;
 
@@ -29,16 +30,18 @@ public class ChordNode implements NotifyCallback {
 	private GameHistory gameHistory;
 	private Strategy strategy;
 
-	public ChordNode(int port, String server, int serverPort) {
+	public ChordNode(int port, String locAdr, String server, int serverPort) {
 		isClient = true;
 		this.port = port;
 		this.serverPort = serverPort;
 		this.server = server;
+		this.locAdr = locAdr;
 		init();
 	}
 
 	public ChordNode(int port) {
 		this.port = port;
+		locAdr = server;
 		this.serverPort = port;
 		init();
 	}
@@ -71,7 +74,7 @@ public class ChordNode implements NotifyCallback {
 		}
 
 		try {
-			localURL = new URL(protocol + "://" + server + ":" + port + "/");
+			localURL = new URL(protocol + "://" + locAdr + ":" + port + "/");
 		} catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		}
@@ -81,8 +84,8 @@ public class ChordNode implements NotifyCallback {
 		if (isClient) {
 			URL bootstrapURL = null;
 			try {
-				bootstrapURL = new URL(protocol + "://" + server + ":" + serverPort
-						+ "/");
+				bootstrapURL = new URL(protocol + "://" + server + ":"
+						+ serverPort + "/");
 			} catch (MalformedURLException e) {
 				throw new RuntimeException(e);
 			}

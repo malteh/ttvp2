@@ -9,13 +9,13 @@ import org.apache.log4j.Logger;
 import de.uniba.wiai.lspi.chord.data.ID;
 
 public class Strategy {
-	
+
 	private Logger logger = Logger.getLogger(Strategy.class);
 	private final GameHistory gameHistory;
 	private final Plan plan;
 	private final ShipManager shipManager;
-	
-	public Strategy(GameHistory g, Plan p,ShipManager s) {
+
+	public Strategy(GameHistory g, Plan p, ShipManager s) {
 		gameHistory = g;
 		plan = p;
 		shipManager = s;
@@ -37,27 +37,29 @@ public class Strategy {
 		logger.info(target + " is the next target");
 		return target;
 	}
-	
+
 	private ID weakestPlan() {
 		List<Enemy> es = gameHistory.getEnemies();
 		if (es.isEmpty())
 			return randomPlan();
-		
+
 		Enemy weakest = es.get(0);
-		
+
 		for (int i = 1; i < es.size(); i++) {
 			Enemy current = es.get(i);
-			if (weakest.shipManager.getShipCount() > current.shipManager.getShipCount())
+			if (weakest.shipManager.getShipCount() > current.shipManager
+					.getShipCount())
 				weakest = current;
 		}
-		
+
 		ID target = weakest.shipManager.getSlotWithShip();
-		
+
 		if (target == null) { // target has no ships left
-			logger.info("WINNER!!!!!" + target + " is dead!");
+			for (int i = 0; i < 100; i++)
+				logger.info("WINNER!!!!!" + target + " is dead!");
 			target = weakest.endId;
 		}
-		
+
 		return target;
 	}
 
@@ -69,7 +71,7 @@ public class Strategy {
 		} while (shipManager.containsID(id));
 		return id;
 	}
-	
+
 	private ID centerPlan() {
 		return null;
 	}

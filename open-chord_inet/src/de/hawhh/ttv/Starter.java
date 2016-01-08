@@ -23,7 +23,7 @@ public class Starter {
 
 	Map<String, ChordNode> nodes = new HashMap<String, ChordNode>();
 
-	public Starter(String serverHostname, int serverPort, int nodesToStart, Boolean startServer) {
+	public Starter(String serverHostname, String locAdr, int serverPort, int nodesToStart, Boolean startServer) {
 		if (startServer) {
 			logger.info("starting server node");
 			ChordNode server = new ChordNode(serverPort);
@@ -31,7 +31,7 @@ public class Starter {
 		}
 		logger.info("starting " + nodesToStart + " nodes");
 		for (int i = 1; i <= nodesToStart; i++) {
-			ChordNode c = new ChordNode((serverPort + i), serverHostname, serverPort);
+			ChordNode c = new ChordNode((serverPort + i),locAdr, serverHostname, serverPort);
 			nodes.put(c.Id(), c);
 		}
 	}

@@ -1,6 +1,7 @@
 package de.hawhh.ttv;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
@@ -26,12 +27,13 @@ public class Ui {
 		JFrame guiFrame = new JFrame();
 		guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		guiFrame.setTitle("Game GUI");
-		guiFrame.setSize(600, 400);
-		guiFrame.setLayout(new GridLayout(2, 3));
+		guiFrame.setSize(500, 100);
+		guiFrame.setLayout(new GridLayout(2, 4));
 		guiFrame.setLocationRelativeTo(null);
 		
-		final TextField adr = new TextField("141.22.27.30");
-		final TextField port = new TextField("8080");
+		final TextField locAdr = new TextField("141.22.27.30");
+		final TextField adr = new TextField("141.22.27.29");
+		final TextField port = new TextField("5001");
 		final TextField nodes = new TextField("1");
 		final Checkbox isServer = new Checkbox("is Server");
 		
@@ -41,7 +43,12 @@ public class Ui {
 		switchViewBut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				s.startGame();
+				try {
+					s.startGame();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, e.getMessage());
+					System.exit(1);
+				}
 			}
 		});
 
@@ -49,11 +56,17 @@ public class Ui {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				logger.info("init game");
-				s = new Starter(adr.getText(), Integer.parseInt(port.getText()), Integer.parseInt(nodes.getText()), isServer.getState());
+				try {
+					s = new Starter(adr.getText(), locAdr.getText(), Integer.parseInt(port.getText()), Integer.parseInt(nodes.getText()), isServer.getState());
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, e.getMessage());
+					System.exit(1);
+				}
 			}
 		});
 		
 		guiFrame.add(adr);
+		guiFrame.add(locAdr);
 		guiFrame.add(port);
 		guiFrame.add(nodes);
 		guiFrame.add(isServer);
