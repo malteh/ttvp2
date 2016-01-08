@@ -5,11 +5,12 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 
-import javax.swing.JComboBox;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JLabel;
-import java.awt.BorderLayout;
+
+import java.awt.Checkbox;
+import java.awt.GridLayout;
+import java.awt.TextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -18,64 +19,48 @@ public class Ui {
 	
 	private Logger logger = Logger.getLogger(Ui.class);
 
-	private IGuiUpdater g;
-
-	public void updateNodes() {
-		nodesBox.removeAll();
-		for (String n : g.getNodeList()) {
-			nodesBox.addItem(n);
-		}
-	}
-
-	String[] nodes = {};
-
 	final JPanel comboPanel = new JPanel();
-	JLabel comboLbl = new JLabel("Nodes:");
-	JComboBox<String> nodesBox = new JComboBox<String>(nodes);
 	DefaultListModel<String> listModel = new DefaultListModel<String>();
-
-	public Ui(final IGuiUpdater g) {
-		this.g = g;
-
+	Starter s;
+	public Ui() {
 		JFrame guiFrame = new JFrame();
 		guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		guiFrame.setTitle("Game GUI");
 		guiFrame.setSize(600, 400);
+		guiFrame.setLayout(new GridLayout(2, 3));
 		guiFrame.setLocationRelativeTo(null);
-
-		comboPanel.add(comboLbl);
-		comboPanel.add(nodesBox);
-
-		final JPanel listPanel = new JPanel();
-		listPanel.setVisible(false);
-
-		JButton switchViewBut = new JButton("Switch view");
-		JButton broadcastBut = new JButton("broadcast");
+		
+		final TextField adr = new TextField("141.22.27.30");
+		final TextField port = new TextField("8080");
+		final TextField nodes = new TextField("1");
+		final Checkbox isServer = new Checkbox("is Server");
+		
+		JButton switchViewBut = new JButton("Start game");
+		JButton broadcastBut = new JButton("Init game");
 
 		switchViewBut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				listPanel.setVisible(!listPanel.isVisible());
-				comboPanel.setVisible(!comboPanel.isVisible());
-
+				s.startGame();
 			}
 		});
 
 		broadcastBut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				logger.info("start game");
-				g.startGame();
+				logger.info("init game");
+				s = new Starter(adr.getText(), Integer.parseInt(port.getText()), Integer.parseInt(nodes.getText()), isServer.getState());
 			}
 		});
 		
-		guiFrame.add(comboPanel, BorderLayout.NORTH);
-		guiFrame.add(listPanel, BorderLayout.CENTER);
-		guiFrame.add(broadcastBut, BorderLayout.EAST);
-		guiFrame.add(switchViewBut, BorderLayout.SOUTH);
+		guiFrame.add(adr);
+		guiFrame.add(port);
+		guiFrame.add(nodes);
+		guiFrame.add(isServer);
+		guiFrame.add(broadcastBut);
+		guiFrame.add(switchViewBut);
 
 		guiFrame.setVisible(true);
-		updateNodes();
 	}
 
 }

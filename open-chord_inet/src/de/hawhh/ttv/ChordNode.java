@@ -19,27 +19,34 @@ public class ChordNode implements NotifyCallback {
 	String protocol = URL.KNOWN_PROTOCOLS.get(URL.SOCKET_PROTOCOL);
 	URL localURL = null;
 	Chord chord = new ChordImpl();
-	private int port;
-	private String server;
+	private final int port;
+	private final int serverPort;
+	private String server = "localhost";
 	private boolean isClient = false;
+	private boolean isStarted = false;
 
 	private ShipManager shipManager;
 	private GameHistory gameHistory;
 	private Strategy strategy;
 
-	public ChordNode(int port, String server) {
+	public ChordNode(int port, String server, int serverPort) {
 		isClient = true;
 		this.port = port;
+		this.serverPort = serverPort;
 		this.server = server;
 		init();
 	}
 
 	public ChordNode(int port) {
 		this.port = port;
+		this.serverPort = port;
 		init();
 	}
 
 	public void startGame(Plan p) {
+		if (isStarted)
+			return;
+		isStarted = true;
 		initShipManager();
 		gameHistory = GameHistory.getInstance(chord.getID());
 		strategy = new Strategy(gameHistory, p, shipManager);
@@ -50,19 +57,21 @@ public class ChordNode implements NotifyCallback {
 	}
 
 	private void initShipManager() {
-		ID start = ID.valueOf(chord.getPredecessorID().toBigInteger().add(BigInteger.valueOf(1)));
+		ID start = ID.valueOf(chord.getPredecessorID().toBigInteger()
+				.add(BigInteger.valueOf(1)));
 		ID end = chord.getID();
 		shipManager = new ShipManager(start, end);
 	}
 
 	private void init() {
 		try {
-			de.uniba.wiai.lspi.chord.service.PropertiesLoader.loadPropertyFile();
+			de.uniba.wiai.lspi.chord.service.PropertiesLoader
+					.loadPropertyFile();
 		} catch (IllegalStateException e) {
 		}
 
 		try {
-			localURL = new URL(protocol + "://localhost:" + port + "/");
+			localURL = new URL(protocol + "://" + server + ":" + port + "/");
 		} catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		}
@@ -72,7 +81,8 @@ public class ChordNode implements NotifyCallback {
 		if (isClient) {
 			URL bootstrapURL = null;
 			try {
-				bootstrapURL = new URL(protocol + "://" + server + ":8080/");
+				bootstrapURL = new URL(protocol + "://" + server + ":" + serverPort
+						+ "/");
 			} catch (MalformedURLException e) {
 				throw new RuntimeException(e);
 			}
@@ -94,9 +104,12 @@ public class ChordNode implements NotifyCallback {
 
 	@Override
 	public void retrieved(ID target) {
+		if (!isStarted)
+			startGame(Plan.WEAKEST);
 		Boolean hit = false;
 		if (target != null) {
-			logger.info(Helper.shortenID(chord.getID()) + " tries hit at " + Helper.shortenID(target));
+			logger.info(Helper.shortenID(chord.getID()) + " tries hit at "
+					+ Helper.shortenID(target));
 			hit = shipManager.tryHit(target);
 		}
 		asyncBroadcastAndFire(target, hit);
@@ -110,7 +123,8 @@ public class ChordNode implements NotifyCallback {
 	public void broadcast(ID source, ID target, Boolean hit, int transactionID) {
 		gameHistory.addEvent(source, target, hit, transactionID);
 		if (hit)
-			logger.info(String.format("▄︻̷̿┻̿═━一 %s hit by %s", Helper.shortenID(target), Helper.shortenID(source)));
+			logger.info(String.format("############### %s hit by %s",
+					Helper.shortenID(target), Helper.shortenID(source)));
 	}
 
 	public String Id() {
