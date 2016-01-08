@@ -26,7 +26,7 @@ public class Starter {
 	public Starter(String serverHostname, String locAdr, int serverPort, int nodesToStart, Boolean startServer) {
 		if (startServer) {
 			logger.info("starting server node");
-			ChordNode server = new ChordNode(serverPort);
+			ChordNode server = new ChordNode(serverPort, locAdr);
 			nodes.put(server.Id(), server);
 		}
 		logger.info("starting " + nodesToStart + " nodes");

@@ -39,9 +39,9 @@ public class ChordNode implements NotifyCallback {
 		init();
 	}
 
-	public ChordNode(int port) {
+	public ChordNode(int port, String locAdr) {
 		this.port = port;
-		locAdr = server;
+		this.locAdr = locAdr;
 		this.serverPort = port;
 		init();
 	}
@@ -116,6 +116,11 @@ public class ChordNode implements NotifyCallback {
 			hit = shipManager.tryHit(target);
 		}
 		asyncBroadcastAndFire(target, hit);
+		
+		logger.info("We: " + shipManager.getSlots());
+		for (Enemy e: gameHistory.getEnemies()) {
+			e.shipManager.logSlots();
+		}
 	}
 
 	private void asyncBroadcastAndFire(ID target, Boolean hit) {

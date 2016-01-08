@@ -17,7 +17,8 @@ public class ShipManager {
 
 	public final int INTERVAL_COUNT = 100;
 	public final int SHIP_COUNT = 10;
-	public final BigInteger chordMax = BigInteger.valueOf(2).pow(160).subtract(BigInteger.ONE);
+	public final BigInteger chordMax = BigInteger.valueOf(2).pow(160)
+			.subtract(BigInteger.ONE);
 
 	private List<Slot> slots = new ArrayList<>();
 
@@ -39,7 +40,7 @@ public class ShipManager {
 		selectShipPositions(ships);
 		logSlots();
 	}
-	
+
 	public ShipManager(ID start, ID end, Boolean value) {
 		this.start = start;
 		this.end = end;
@@ -49,14 +50,17 @@ public class ShipManager {
 
 	private void initSlots() {
 		BigInteger totalSize = diff(end, start);
-		BigInteger slotSize = totalSize.divide(BigInteger.valueOf(INTERVAL_COUNT));
+		BigInteger slotSize = totalSize.divide(BigInteger
+				.valueOf(INTERVAL_COUNT));
 		for (int i = 0; i < INTERVAL_COUNT; i++) {
 			BigInteger delta = slotSize.multiply(BigInteger.valueOf(i));
 			ID s = ID.valueOf(start.toBigInteger().add(delta));
-			ID e = ID.valueOf(s.toBigInteger().add(slotSize).subtract(BigInteger.valueOf(1)));
+			ID e = ID.valueOf(s.toBigInteger().add(slotSize)
+					.subtract(BigInteger.valueOf(1)));
 			slots.add(new Slot(s, e));
 		}
-		// numerisch überzählige Adressen werden dem numerisch letzten Intervall
+		// numerisch überzählige Adressen werden dem numerisch letzten
+		// Intervall
 		// zugeschlagen
 		slots.get(slots.size() - 1).end = end;
 	}
@@ -79,21 +83,21 @@ public class ShipManager {
 			slots.get(i).hasShip = true;
 		}
 	}
-	
+
 	private void setAllShipPositionsValue(Boolean value) {
 		for (Slot s : slots) {
 			s.hasShip = value;
 		}
 	}
-	
+
 	public Boolean hasShips() {
 		return shipCount <= 0;
 	}
-	
+
 	public int getShipCount() {
 		return shipCount;
 	}
-	
+
 	public ID getSlotWithShip() {
 		for (Slot slot : slots) {
 			if (slot.hasShip)
@@ -115,7 +119,7 @@ public class ShipManager {
 
 		return false;
 	}
-	
+
 	public Boolean containsID(ID id) {
 		ID s = ID.valueOf(start.toBigInteger().subtract(BigInteger.valueOf(1)));
 		ID e = ID.valueOf(end.toBigInteger().add(BigInteger.valueOf(1)));
@@ -124,8 +128,10 @@ public class ShipManager {
 
 	private Slot getContainingSlot(ID id) {
 		for (Slot slot : slots) {
-			ID s = ID.valueOf(slot.start.toBigInteger().subtract(BigInteger.valueOf(1)));
-			ID e = ID.valueOf(slot.end.toBigInteger().add(BigInteger.valueOf(1)));
+			ID s = ID.valueOf(slot.start.toBigInteger().subtract(
+					BigInteger.valueOf(1)));
+			ID e = ID.valueOf(slot.end.toBigInteger()
+					.add(BigInteger.valueOf(1)));
 			if (id.isInInterval(s, e)) {
 				return slot;
 			}
@@ -138,13 +144,24 @@ public class ShipManager {
 	}
 
 	public BigInteger diff(ID end, ID start) {
-		return end.toBigInteger().add(start.toBigInteger().negate()).mod(chordMax);
+		return end.toBigInteger().add(start.toBigInteger().negate())
+				.mod(chordMax);
 	}
 
-	public void logSlots() {
+	public String getSlots() {
+		String ret = "";
 		for (int i = 0; i < INTERVAL_COUNT; i++) {
-			logger.debug(String.format("Slot %2d: %s", i, slots.get(i)));
+			Boolean possibleShip = slots.get(i).hasShip;
+			if (possibleShip)
+				ret += "+";
+			else
+				ret += "-";
 		}
+		return ret;
+	}
+	
+	public void logSlots() {
+		logger.debug("Ships: " + Helper.shortenID(end) + " " + getSlots());
 	}
 
 	public class Slot {
@@ -160,7 +177,8 @@ public class ShipManager {
 		}
 
 		public String toString() {
-			return String.format("Start: %s, End: %s, Has Ship: %s", start, end, hasShip);
+			return String.format("Start: %s, End: %s, Has Ship: %s", start,
+					end, hasShip);
 		}
 	}
 

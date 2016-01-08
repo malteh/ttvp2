@@ -24,9 +24,6 @@ public class Strategy {
 	public ID getTarget() {
 		ID target = null;
 		switch (plan) {
-		case CENTER:
-			target = centerPlan();
-			break;
 		case WEAKEST:
 			target = weakestPlan();
 			break;
@@ -55,9 +52,14 @@ public class Strategy {
 		ID target = weakest.shipManager.getSlotWithShip();
 
 		if (target == null) { // target has no ships left
-			for (int i = 0; i < 100; i++)
-				logger.info("WINNER!!!!!" + target + " is dead!");
+			for (int i = 0; i < 10; i++)
+				logger.info("WINNER!!!!!" + weakest.endId + " is dead!");
 			target = weakest.endId;
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return target;
@@ -72,12 +74,8 @@ public class Strategy {
 		return id;
 	}
 
-	private ID centerPlan() {
-		return null;
-	}
-
 	public enum Plan {
-		RANDOM, CENTER, WEAKEST
+		RANDOM, WEAKEST
 	}
 
 }
