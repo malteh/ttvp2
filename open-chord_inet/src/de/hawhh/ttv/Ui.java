@@ -33,7 +33,7 @@ public class Ui {
 		guiFrame.setTitle("Game GUI");
 		// Hoehen und Breitenangaben der GUI
 		guiFrame.setSize(500, 100);
-	    //  Frameausrichtung
+	        //  Frameausrichtung
 		guiFrame.setLayout(new GridLayout(2, 4));
 		guiFrame.setLocationRelativeTo(null);
 		
