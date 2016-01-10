@@ -16,6 +16,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 // UI template from http://java.about.com/od/creatinguserinterfaces/ss/Example-Java-Code-For-Building-A-Simple-Gui-Application.htm
+// GUI Initialisierung
+
 public class Ui {
 	
 	private Logger logger = Logger.getLogger(Ui.class);
@@ -24,22 +26,30 @@ public class Ui {
 	DefaultListModel<String> listModel = new DefaultListModel<String>();
 	Starter s;
 	public Ui() {
+		
+		
 		JFrame guiFrame = new JFrame();
 		guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		guiFrame.setTitle("Game GUI");
+		// Hoehen und Breitenangaben der GUI
 		guiFrame.setSize(500, 100);
+	    //  Frameausrichtung
 		guiFrame.setLayout(new GridLayout(2, 4));
 		guiFrame.setLocationRelativeTo(null);
 		
-		final TextField locAdr = new TextField("141.22.27.30");
-		final TextField adr = new TextField("141.22.27.29");
-		final TextField port = new TextField("5001");
+		// GUI Feldelemente
+		final TextField locAdr = new TextField("192.168.178.30");
+		final TextField adr = new TextField("192.168.178.30");
+		final TextField port = new TextField("5002");
 		final TextField nodes = new TextField("1");
 		final Checkbox isServer = new Checkbox("is Server");
 		
+		// GUI Knoepfe
 		JButton switchViewBut = new JButton("Start game");
 		JButton broadcastBut = new JButton("Init game");
 
+		// Startknopflogik inklusive Debugfunktionalitaet
+		
 		switchViewBut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
@@ -52,6 +62,7 @@ public class Ui {
 			}
 		});
 
+		// Broadcast Initialisierung mit dem Log "Init Game"
 		broadcastBut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
@@ -65,6 +76,7 @@ public class Ui {
 			}
 		});
 		
+		// GUI Framedefinition
 		guiFrame.add(adr);
 		guiFrame.add(locAdr);
 		guiFrame.add(port);
