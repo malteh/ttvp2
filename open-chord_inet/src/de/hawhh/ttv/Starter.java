@@ -17,7 +17,6 @@ public class Starter {
 		// Initialisierung des gesamten Spiels
 		logger.info("Starting ...");
 		de.uniba.wiai.lspi.chord.service.PropertiesLoader.loadPropertyFile();
-		// TODO set parameters via gui
 		
 		// GUI Initialisierung  
 		new Ui();
@@ -27,7 +26,7 @@ public class Starter {
 	Map<String, ChordNode> nodes = new HashMap<String, ChordNode>();
 
 	// Initialisierung der GUI Paramter
-    // Server IP - serverHostname
+        // Server IP - serverHostname
 	// Lokale IP - locAdr
 	// Port - serverPort
 	// Wieviele Gegner - nodesToStart
@@ -72,7 +71,7 @@ public class Starter {
 		} catch (InterruptedException e) {
 			logger.fatal(e);
 		}
-		// Speilverhalten der Nodes (Strategie)
+		// Speilverhalten der Nodes (Strategiezuweisung)
 		for (ChordNode node : nodes.values()) {
 			node.startGame(Plan.WEAKEST);
 		}
