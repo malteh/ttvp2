@@ -12,9 +12,10 @@ public class Starter {
 
 	// Deklaration des Loggings fuer Console und File history.log
 	private static Logger logger = Logger.getLogger(Starter.class);
-
+	
+	// Initialisierung des gesamten Spiels
 	public static void main(String[] args) {
-		// Initialisierung des gesamten Spiels
+		
 		logger.info("Starting ...");
 		de.uniba.wiai.lspi.chord.service.PropertiesLoader.loadPropertyFile();
 		
