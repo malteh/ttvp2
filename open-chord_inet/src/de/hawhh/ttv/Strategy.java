@@ -48,6 +48,7 @@ public class Strategy {
 		Enemy weakest = es.get(0);
 
                 /// Erfassungschleife für die Anzahl der verbliebenden Schiffe
+                /// und die Neusausrichtung des schwächsten Gegner
 		for (int i = 1; i < es.size(); i++) {
 			Enemy current = es.get(i);
 			if (weakest.shipManager.getShipCount() > current.shipManager
@@ -57,8 +58,8 @@ public class Strategy {
 
 		ID target = weakest.shipManager.getSlotWithShip();
 
-	
-		if (target == null) { // target has no ships left
+         	// target has no ships left
+		if (target == null) { 
 		
 			// Ausgabe beim Sieg
 			for (int i = 0; i < 10; i++)
