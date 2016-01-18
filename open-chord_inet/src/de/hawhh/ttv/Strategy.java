@@ -35,6 +35,10 @@ public class Strategy {
 		return target;
 	}
 
+        // Stategie 1
+        // Schwaechster Gegner
+        // Dieser Plan wird gemsesen anhand der Anzahl der ürbrigen Schiffe die 
+        // der Gegner noch besitzt.
 	private ID weakestPlan() {
 		List<Enemy> es = gameHistory.getEnemies();
 		if (es.isEmpty())
@@ -68,7 +72,9 @@ public class Strategy {
 		return target;
 	}
 
-	// Definition des Zufallsplans
+	// Stategie 2
+	// Zufallsplan
+	
 	private ID randomPlan() {
 		Random rnd = new Random();
 		ID id;
