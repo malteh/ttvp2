@@ -18,6 +18,7 @@ public class ChordNode implements NotifyCallback {
 	private Logger logger = Logger.getLogger(ChordNode.class);
 	String protocol = URL.KNOWN_PROTOCOLS.get(URL.SOCKET_PROTOCOL);
 	URL localURL = null;
+	
 	Chord chord = new ChordImpl();
 	private final int port;
 	private final int serverPort;
@@ -31,6 +32,7 @@ public class ChordNode implements NotifyCallback {
 	private Strategy strategy;
 
 	// Chord Konstruktor für Serverfunktionalität
+	// Uneterscheidung mit zusatzliche Paramter für die Serveradresse und Serverport
 	public ChordNode(int port, String locAdr, String server, int serverPort) {
 		isClient = true;
 		this.port = port;
@@ -40,7 +42,7 @@ public class ChordNode implements NotifyCallback {
 		init();
 	}
         
-        // Chord Konstruktor für Basic Node
+        // Chord Konstruktor für Basic Nodes
 	public ChordNode(int port, String locAdr) {
 		this.port = port;
 		this.locAdr = locAdr;
