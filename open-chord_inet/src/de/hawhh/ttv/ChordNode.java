@@ -30,6 +30,7 @@ public class ChordNode implements NotifyCallback {
 	private GameHistory gameHistory;
 	private Strategy strategy;
 
+	// Chord Konstruktor für Serverfunktionalität
 	public ChordNode(int port, String locAdr, String server, int serverPort) {
 		isClient = true;
 		this.port = port;
@@ -38,7 +39,8 @@ public class ChordNode implements NotifyCallback {
 		this.locAdr = locAdr;
 		init();
 	}
-
+        
+        // Chord Konstruktor für Basic Node
 	public ChordNode(int port, String locAdr) {
 		this.port = port;
 		this.locAdr = locAdr;
