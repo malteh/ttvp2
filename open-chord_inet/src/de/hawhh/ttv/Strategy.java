@@ -21,6 +21,7 @@ public class Strategy {
 		shipManager = s;
 	}
 
+	
 	public ID getTarget() {
 		ID target = null;
 		switch (plan) {
@@ -46,6 +47,7 @@ public class Strategy {
 
 		Enemy weakest = es.get(0);
 
+                /// Erfassungschleife für die Anzahl der verbliebenden Schiffe
 		for (int i = 1; i < es.size(); i++) {
 			Enemy current = es.get(i);
 			if (weakest.shipManager.getShipCount() > current.shipManager
