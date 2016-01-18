@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 import de.uniba.wiai.lspi.chord.data.ID;
 
 public class ShipManager {
-	// Klasse zur Verwaltung eines Mitspielers
+	// Klasse zur Verwaltung aller Mitspieler
 
 	private Logger logger = Logger.getLogger(ShipManager.class);
 
