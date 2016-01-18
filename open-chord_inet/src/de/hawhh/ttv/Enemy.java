@@ -2,6 +2,9 @@ package de.hawhh.ttv;
 
 import de.uniba.wiai.lspi.chord.data.ID;
 
+// Klasse fuer die Verwaltung der Gegner
+// Enthaelt IDs fuer Start und Ende des Bereichs
+// ein Shipmanager verwaltet die Treffer
 public class Enemy implements Comparable<Enemy>{
 	public final ID startId;
 	public final ID endId;
