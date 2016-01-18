@@ -21,13 +21,12 @@ public class Starter {
 		
 		// GUI Initialisierung  
 		new Ui();
-		//new Starter("141.22.27.30", 8080, 0, true);
 	}
 
 	Map<String, ChordNode> nodes = new HashMap<String, ChordNode>();
 
 	// Initialisierung der GUI Paramter
-        // Server IP - serverHostname
+    // Server IP - serverHostname
 	// Lokale IP - locAdr
 	// Port - serverPort
 	// Wieviele Gegner - nodesToStart
@@ -72,7 +71,7 @@ public class Starter {
 		} catch (InterruptedException e) {
 			logger.fatal(e);
 		}
-		// Speilverhalten der Nodes (Strategiezuweisung)
+		// Spielverhalten der Nodes (Strategiezuweisung)
 		for (ChordNode node : nodes.values()) {
 			node.startGame(Plan.WEAKEST);
 		}
