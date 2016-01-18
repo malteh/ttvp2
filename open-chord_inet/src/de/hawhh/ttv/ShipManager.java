@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import de.uniba.wiai.lspi.chord.data.ID;
 
 public class ShipManager {
+	// Klasse zur Verwaltung eines Mitspielers
 
 	private Logger logger = Logger.getLogger(ShipManager.class);
 
@@ -20,12 +21,15 @@ public class ShipManager {
 	public final BigInteger chordMax = BigInteger.valueOf(2).pow(160)
 			.subtract(BigInteger.ONE);
 
+	// Liste
 	private List<Slot> slots = new ArrayList<>();
 
 	private final ID start;
 	private final ID end;
 	private int shipCount = SHIP_COUNT;
-
+	
+	
+        // Konstruktor 1
 	public ShipManager(ID start, ID end) {
 		this.start = start;
 		this.end = end;
@@ -33,6 +37,7 @@ public class ShipManager {
 		selectShipPositions();
 	}
 
+	// Konstruktor 2
 	public ShipManager(ID start, ID end, Set<Integer> ships) {
 		this.start = start;
 		this.end = end;
@@ -41,6 +46,7 @@ public class ShipManager {
 		logSlots();
 	}
 
+	// Konstruktor 3
 	public ShipManager(ID start, ID end, Boolean value) {
 		this.start = start;
 		this.end = end;
