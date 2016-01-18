@@ -38,7 +38,7 @@ public class Strategy {
 
         // Strategie 1
         // Schwaechster Gegner
-        // Dieser Plan wird gemsesen anhand der Anzahl der ürbrigen Schiffe die 
+        // Dieser Plan wird gemessen anhand der Anzahl der ürbrigen Schiffe die 
         // der Gegner noch besitzt.
 	private ID weakestPlan() {
 		List<Enemy> es = gameHistory.getEnemies();
