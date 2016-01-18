@@ -13,6 +13,7 @@ import de.uniba.wiai.lspi.chord.service.NotifyCallback;
 import de.uniba.wiai.lspi.chord.service.ServiceException;
 import de.uniba.wiai.lspi.chord.service.impl.ChordImpl;
 
+// Klasse fuer Teilnehmer des Chord-Netzwerks
 public class ChordNode implements NotifyCallback {
 
 	private Logger logger = Logger.getLogger(ChordNode.class);
@@ -32,7 +33,7 @@ public class ChordNode implements NotifyCallback {
 	private Strategy strategy;
 
 	// Chord Konstruktor für Serverfunktionalität
-	// Uneterscheidung mit zusatzliche Paramter für die Serveradresse und Serverport
+	// Unterscheidung mit zusatzliche Paramter für die Serveradresse und Serverport
 	public ChordNode(int port, String locAdr, String server, int serverPort) {
 		isClient = true;
 		this.port = port;
@@ -42,7 +43,7 @@ public class ChordNode implements NotifyCallback {
 		init();
 	}
         
-        // Chord Konstruktor für Basic Nodes
+    // Chord Konstruktor für Basic Nodes
 	public ChordNode(int port, String locAdr) {
 		this.port = port;
 		this.locAdr = locAdr;
@@ -50,6 +51,11 @@ public class ChordNode implements NotifyCallback {
 		init();
 	}
 
+	// Methode initialisiert 
+	// - die Verwaltung der Schiffe
+	// - die Strategie
+	// - die Historie
+	
 	public void startGame(Plan p) {
 		if (isStarted)
 			return;
@@ -70,6 +76,9 @@ public class ChordNode implements NotifyCallback {
 		shipManager = new ShipManager(start, end);
 	}
 
+	// Initialisierung
+	// unterscheidet zwischen Client
+	// und Bootstrap-Node
 	private void init() {
 		try {
 			de.uniba.wiai.lspi.chord.service.PropertiesLoader
@@ -143,6 +152,7 @@ public class ChordNode implements NotifyCallback {
 		return chord.getID().toString();
 	}
 
+	// Interne Klasse, um Nachrichten asynchron zu senden
 	private class AsyncBroadcast implements Runnable {
 
 		Chord chord;
