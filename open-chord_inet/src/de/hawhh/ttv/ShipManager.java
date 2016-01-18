@@ -154,6 +154,9 @@ public class ShipManager {
 				.mod(chordMax);
 	}
 
+        // Feldausgabe mit "+" mögliches Schiff und "-" bei keinem Schiff 
+        // Diese Ausgabe zeigt die konkrete Verteilung der Schiffe beim Hauptspieler
+        // und geht systematisch nach jeden Schussversuch beim Gegner durch indem es ein weiters Feld aufdeckt.
 	public String getSlots() {
 		String ret = "";
 		for (int i = 0; i < INTERVAL_COUNT; i++) {
