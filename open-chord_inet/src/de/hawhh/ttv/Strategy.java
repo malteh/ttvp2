@@ -22,6 +22,7 @@ public class Strategy {
 	}
 
 	
+	// Strategiebestimmung für den Gegner
 	public ID getTarget() {
 		ID target = null;
 		switch (plan) {
