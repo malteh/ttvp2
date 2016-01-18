@@ -21,7 +21,7 @@ public class ShipManager {
 	public final BigInteger chordMax = BigInteger.valueOf(2).pow(160)
 			.subtract(BigInteger.ONE);
 
-	// Liste
+	// Liste der Bereiche, in denen Schiffe sein koennen
 	private List<Slot> slots = new ArrayList<>();
 
 	private final ID start;
@@ -29,7 +29,7 @@ public class ShipManager {
 	private int shipCount = SHIP_COUNT;
 	
 	
-        // Konstruktor 1
+    // Konstruktor fuer zufallsverteilung
 	public ShipManager(ID start, ID end) {
 		this.start = start;
 		this.end = end;
@@ -37,7 +37,7 @@ public class ShipManager {
 		selectShipPositions();
 	}
 
-	// Konstruktor 2
+	// Konstruktor fuer Vorbelegung der Positionen ueber ein Set von Indizes
 	public ShipManager(ID start, ID end, Set<Integer> ships) {
 		this.start = start;
 		this.end = end;
@@ -46,7 +46,7 @@ public class ShipManager {
 		logSlots();
 	}
 
-	// Konstruktor 3
+	// Konstruktor zum Vorbelegen aller Felder mit einem bestimmten bool Wert
 	public ShipManager(ID start, ID end, Boolean value) {
 		this.start = start;
 		this.end = end;
@@ -54,6 +54,7 @@ public class ShipManager {
 		setAllShipPositionsValue(value);
 	}
 
+	// Slots aus Start und Ende berechnen
 	private void initSlots() {
 		BigInteger totalSize = diff(end, start);
 		BigInteger slotSize = totalSize.divide(BigInteger
@@ -71,6 +72,7 @@ public class ShipManager {
 		slots.get(slots.size() - 1).end = end;
 	}
 
+	// zufaellig Schiffe in Slots setzen
 	private void selectShipPositions() {
 		Set<Integer> ships = new HashSet<>();
 
@@ -84,12 +86,14 @@ public class ShipManager {
 		}
 	}
 
+	// Schiffe auf feste Positionen setzen
 	private void selectShipPositions(Set<Integer> ships) {
 		for (Integer i : ships) {
 			slots.get(i).hasShip = true;
 		}
 	}
 
+	// alle Felder mit Wert belegen
 	private void setAllShipPositionsValue(Boolean value) {
 		for (Slot s : slots) {
 			s.hasShip = value;
@@ -112,6 +116,7 @@ public class ShipManager {
 		return null;
 	}
 
+	// Versuche zu treffen, Rueckgabe ist Treffer ja/nein
 	public Boolean tryHit(ID id) {
 		Slot s = getContainingSlot(id);
 		if (s == null)
@@ -145,6 +150,7 @@ public class ShipManager {
 		return null;
 	}
 
+	// Helper, um festzustellen, wer anfaengt
 	public boolean hasMaxID() {
 		return getContainingSlot(ID.valueOf(chordMax)) != null;
 	}
@@ -154,9 +160,9 @@ public class ShipManager {
 				.mod(chordMax);
 	}
 
-        // Feldausgabe mit "+" mögliches Schiff und "-" bei keinem Schiff 
-        // Diese Ausgabe zeigt die konkrete Verteilung der Schiffe beim Hauptspieler
-        // und geht systematisch nach jeden Schussversuch beim Gegner durch indem es ein weiters Feld aufdeckt.
+    // Feldausgabe mit "+" mögliches Schiff und "-" bei keinem Schiff 
+    // Diese Ausgabe zeigt die konkrete Verteilung der Schiffe beim Hauptspieler
+    // und geht systematisch nach jeden Schussversuch beim Gegner durch indem es ein weiters Feld aufdeckt.
 	public String getSlots() {
 		String ret = "";
 		for (int i = 0; i < INTERVAL_COUNT; i++) {
@@ -173,6 +179,7 @@ public class ShipManager {
 		logger.debug("Ships: " + Helper.shortenID(end) + " " + getSlots());
 	}
 
+	// interne Klasse, um einen Slot darzustellen
 	public class Slot {
 		public ID start;
 		public ID end;
