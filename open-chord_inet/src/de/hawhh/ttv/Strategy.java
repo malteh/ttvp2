@@ -51,7 +51,10 @@ public class Strategy {
 
 		ID target = weakest.shipManager.getSlotWithShip();
 
+	
 		if (target == null) { // target has no ships left
+		
+			// Ausgabe beim Sieg
 			for (int i = 0; i < 10; i++)
 				logger.info("WINNER!!!!!" + weakest.endId + " is dead!");
 			target = weakest.endId;
@@ -65,6 +68,7 @@ public class Strategy {
 		return target;
 	}
 
+	// Definition des Zufallsplans
 	private ID randomPlan() {
 		Random rnd = new Random();
 		ID id;
