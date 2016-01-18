@@ -35,7 +35,7 @@ public class Strategy {
 		return target;
 	}
 
-        // Stategie 1
+        // Strategie 1
         // Schwaechster Gegner
         // Dieser Plan wird gemsesen anhand der Anzahl der ürbrigen Schiffe die 
         // der Gegner noch besitzt.
@@ -72,7 +72,7 @@ public class Strategy {
 		return target;
 	}
 
-	// Stategie 2
+	// Strategie 2
 	// Zufallsplan
 	
 	private ID randomPlan() {
